@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Sandbox Test
+		</title>
+		<script>
+			let iframeContent = `
+				<!DOCTYPE html>
+				<html>
+					<head>
+						<title>
+							Sandbox Frame
+						</title>
+						<style>
+							body {
+								background-color: blue;
+							}
+						</style>
+						<script src='iframe-script.js'><\/script>
+					<head>
+					<body>
+						<h3 id='frameType'></h3>
+					</body>
+				</html>
+			`
+			function log(msg) {
+				let el = document.createElement('p');
+				el.innerText = msg;
+				document.body.appendChild(el);
+				return msg + ' logged';
+			}
+			window.onload = function() {
+				let iframe = document.createElement('iframe');
+				iframe.width = "300";
+				iframe.height = "250";
+				iframe.setAttribute('srcdoc', iframeContent);
+				document.getElementById('iframe-container').appendChild(iframe);
+				
+				let sandboxIframe = document.createElement('iframe');
+				sandboxIframe.width = "300";
+				sandboxIframe.height = "250";
+				sandboxIframe.setAttribute('srcdoc', iframeContent);
+				sandboxIframe.setAttribute('sandbox', 'allow-scripts')
+				document.getElementById('sandbox-iframe-container').appendChild(sandboxIframe);
+			}
+		</script>
+		
+  </head>
+	<body>
+		<h1>Same Origin - No Sandbox</h1>
+		<iframe src="frame.html" width="300" height="250"></iframe>
+		<h1>Same Origin - Referrer Policy="No Referrer"</h1>
+		<iframe src="frame.html" referrerpolicy="no-referrer" width="300" height="250"></iframe>
+		<h1>Same Origin - Sandbox="Allow Scripts"</h1>
+		<iframe src="frame.html" sandbox="allow-scripts" width="300" height="250"></iframe>
+		<h1>Same Origin - Sandbox="Allow Scripts" and Referrer Policy="No Referrer"</h1>
+		<iframe src="frame.html" referrerpolicy="no-referrer" sandbox="allow-scripts" width="300" height="250"></iframe>
+		<h1>Same Origin - Sandbox="Allow Scripts" and X-Frame-Options SAMEORIGIN</h1>
+		<iframe src="same-origin-only/frame.html" sandbox="allow-scripts" width="300" height="250"></iframe>
+		<h1>Mixed Origin - Sandbox="Allow Scripts"</h1>
+		<iframe src="http://localhost:3001/frame.html" sandbox="allow-scripts" width="300" height="250"></iframe>
+		<h1>Mixed Origin - X-Frame-Options SAMEORIGIN</h1>
+		<iframe src="http://localhost:3001/same-origin-only/frame.html" sandbox="allow-scripts" width="300" height="250"></iframe>
+		<h1>Dynamic - No Sandbox</h1>
+		<div id="iframe-container"></div>
+		<h1>Dynamic - Sandbox="Allow Scripts"</h1>
+		<div id="sandbox-iframe-container"></div>
+	</body>
+</html>
